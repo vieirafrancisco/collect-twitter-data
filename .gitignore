@@ -1,2 +1,8 @@
 #pipfile lock
 Pipfile.lock
+
+#vscode
+.vscode
+
+#api key
+config.key.yaml
