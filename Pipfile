@@ -4,11 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pep8 = "*"
 
 [packages]
 tweepy = "*"
 numpy = "*"
 pandas = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+createkey = "python main.py --cokey True"
