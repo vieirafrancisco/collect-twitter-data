@@ -6,3 +6,6 @@ Pipfile.lock
 
 #api key
 config.key.yaml
+
+#resultset files
+resultset/*.csv
