@@ -83,6 +83,7 @@ def request_twitter_objects(
             try:
                 user = api.get_user(identifier)
                 save_user_object(user, config)
+                print("User " + str(identifier) + " object, success!")
             except tweepy.TweepError as e:
                 print(e)
             except Exception as e:
@@ -92,6 +93,7 @@ def request_twitter_objects(
             try:
                 timeline = api.user_timeline(identifier, count=200)
                 save_user_timeline(timeline, config)
+                print("User " + str(identifier) + " timeline, success!")
             except tweepy.TweepError as e:
                 print(e)
             except Exception as e:
