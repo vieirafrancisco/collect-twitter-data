@@ -1,1 +1,4 @@
-RESULTSET_PATH: "resultset/users"
+RESULTSET_PATH: "resultset/"
+
+USER_TABLE: "user_table.csv"
+TIMELINE_TABLE: "timeline_table.csv"
