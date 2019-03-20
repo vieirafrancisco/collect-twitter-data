@@ -15,3 +15,4 @@ test.py
 
 #csv lock
 .~lock.user_table.csv#
+.~lock.timeline_table.csv#
