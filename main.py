@@ -1,5 +1,4 @@
 import os
-import sys
 import argparse
 
 import utils
@@ -16,13 +15,11 @@ def create_configkey_file():
 def get_commandline_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--in', dest='infile', nargs='?',
-        type=str
+        '--in', dest='infile', nargs='?', type=str
     )
     parser.add_argument(
-        '--cokey', dest='confkey', nargs='?',
-        type=string_to_bool_type,
-        default=False
+        '--ckey', nargs='?',
+        type=string_to_bool_type, default=False
     )
     parser.add_argument(
         '--user', nargs='?',
@@ -35,8 +32,7 @@ def get_commandline_arguments():
         const=True, default=True
     )
     parser.add_argument(
-        '--range', nargs=2,
-        type=int
+        '--range', nargs=2, type=int
     )
 
     return parser.parse_args()
@@ -55,7 +51,7 @@ if __name__ == '__main__':
     args = get_commandline_arguments()
 
     # if needs to create a config key file
-    if args.confkey:
+    if args.ckey:
         if "config.key.yaml" not in os.listdir('.'):
             create_configkey_file()
         else:
@@ -63,3 +59,7 @@ if __name__ == '__main__':
 
     if not (args.tline or args.user):
         raise Exception("tline and user argument can't be both False")
+
+    utils.request_twitter_objects(
+        args.infile, args.user, args.tline, args.range
+    )
