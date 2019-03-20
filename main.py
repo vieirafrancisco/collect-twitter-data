@@ -60,6 +60,9 @@ if __name__ == '__main__':
     if not (args.tline or args.user):
         raise Exception("tline and user argument can't be both False")
 
-    utils.request_twitter_objects(
-        args.infile, args.user, args.tline, args.range
-    )
+    if args.infile:
+        utils.request_twitter_objects(
+            args.infile, args.user, args.tline, args.range
+        )
+    else:
+        print("Need to use the --in='path', informing the file path")
