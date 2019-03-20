@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pep8 = "*"
+flake8 = "*"
 
 [packages]
 tweepy = "*"
@@ -13,7 +13,7 @@ pandas = "*"
 pyyaml = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
 
 [scripts]
-createkey = "python main.py --cokey True"
+createkey = "python main.py --ckey=True"
