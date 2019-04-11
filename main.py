@@ -55,14 +55,17 @@ if __name__ == '__main__':
         if "config.key.yaml" not in os.listdir('.'):
             create_configkey_file()
         else:
-            print("already exist this file")
+            raise Exception("already exist this file")
 
     if not (args.tline or args.user):
         raise Exception("tline and user argument can't be both False")
 
     if args.infile:
-        utils.request_twitter_objects(
-            args.infile, args.user, args.tline, args.range
-        )
+        if os.path.isfile(args.infile):
+            utils.request_twitter_objects(
+                args.infile, args.user, args.tline, args.range
+            )
+        else:
+            raise Exception("Input file doesn't exist!")
     else:
-        print("Need to use the --in='path', informing the file path")
+        print("Warning: Need to use the --in='path', informing the file path")
