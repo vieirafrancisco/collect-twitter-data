@@ -26,37 +26,22 @@ def get_twitter_api_instance():
     )
 
     if(not api):
-        print("Something wrong!")
-        return 0
+        raise Exception("Can't instantiate the twitter api")
 
     return api
 
 
-def read_input_file_with_id(path: str) -> List[int]:
-    df = pd.read_csv(path)
+def get_users_identifiers(file_path: str) -> List:
+    df = pd.read_csv(file_path)
+    identifiers = []
 
-    if "id" not in df.columns:
-        return []
-
-    return list(df["id"])
-
-
-def read_input_file_with_screen_name(path: str) -> List[str]:
-    df = pd.read_csv(path)
-
-    if "screen_name" not in df.columns:
-        return []
-
-    return list(df["screen_name"])
-
-
-def get_user_identifiers(file_path: str) -> List:
-    identifiers = read_input_file_with_id(file_path)
+    if 'id' in df.columns:
+        identifiers = list(df['id'])
+    elif 'screen_name' in df.columns:
+        identifiers = list(df['screen_name'])
 
     if identifiers == []:
-        identifiers = read_input_file_with_screen_name(file_path)
-        if identifiers == []:
-            raise Exception("This file don't have id or screen_name columns!")
+        raise Exception("This file don't have id or screen_name columns!")
 
     return identifiers
 
@@ -72,7 +57,7 @@ def request_twitter_objects(
 ) -> None:
     api = get_twitter_api_instance()
     try:
-        user_identifiers = get_user_identifiers(file_path)
+        user_identifiers = get_users_identifiers(file_path)
     except Exception as e:
         raise Exception(e)
 
