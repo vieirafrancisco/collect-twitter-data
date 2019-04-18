@@ -1,9 +1,11 @@
+import time
 import os
 from typing import List
 
 import pandas as pd
 import tweepy
 import yaml
+import json
 
 
 def get_twitter_api_instance():
@@ -31,17 +33,13 @@ def get_twitter_api_instance():
     return api
 
 
-def get_users_identifiers(file_path: str) -> List:
+def get_users_identifiers(file_path: str) -> List[int]:
     df = pd.read_csv(file_path)
-    identifiers = []
 
     if 'id' in df.columns:
         identifiers = list(df['id'])
-    elif 'screen_name' in df.columns:
-        identifiers = list(df['screen_name'])
-
-    if identifiers == []:
-        raise Exception("This file don't have id or screen_name columns!")
+    else:
+        raise Exception("This file don't have id column!")
 
     return identifiers
 
@@ -52,23 +50,46 @@ def get_config() -> dict:
     return config
 
 
+def filter_identifiers(
+    identifiers: List[int], config: dict, irange: List[int]
+) -> List[int]:
+    temp_identifiers = identifiers
+
+    if irange:
+        temp_identifiers = temp_identifiers[irange[0]:irange[1]]
+
+    if config["TIMELINE_TABLE"] in os.listdir(config["RESULTSET_PATH"]):
+        curr_identifiers = pd.read_csv(config["COMPLETE_TLINE_PATH"]).values
+        temp_identifiers = [
+            identifier
+            for identifier in temp_identifiers
+            if identifier not in curr_identifiers]
+
+    return temp_identifiers
+
+
 def request_twitter_objects(
-    file_path: str, user_arg=True, tline_arg=True, range=None
+    file_path: str, user_arg=True, tline_arg=True, irange=None
 ) -> None:
     api = get_twitter_api_instance()
+    config = get_config()
+
     try:
         user_identifiers = get_users_identifiers(file_path)
     except Exception as e:
         raise Exception(e)
 
-    config = get_config()
+    user_identifiers = filter_identifiers(user_identifiers, config, irange)
 
     for identifier in user_identifiers:
         if user_arg:
             try:
+                begin = time.time()
                 user = api.get_user(identifier)
                 save_user_object(user, config)
-                print("User " + str(identifier) + " object, success!")
+                end = time.time()
+                print("User {} object, success! => {:.2f}s".format(
+                    identifier, end-begin))
             except tweepy.TweepError as e:
                 print(e)
             except Exception as e:
@@ -76,40 +97,48 @@ def request_twitter_objects(
 
         if tline_arg:
             try:
+                begin = time.time()
                 timeline = api.user_timeline(identifier, count=200)
-                save_user_timeline(timeline, config)
-                print("User " + str(identifier) + " timeline, success!")
+                save_user_timeline(identifier, timeline, config)
+                end = time.time()
+                print("User {} timeline, success! => {:.2f}s".format(
+                    identifier, end-begin))
             except tweepy.TweepError as e:
                 print(e)
             except Exception as e:
                 print(e)
 
 
-def save_object(obj: object, path: str, file_name: str) -> None:
+def save_dataframe(df: object, path: str, file_name: str) -> None:
     file_path = path+file_name
-    columns = list(obj._json.keys())
-    instance = list(obj._json.values())
 
-    if file_name not in os.listdir(path):
-        df = pd.DataFrame([instance], columns=columns)
+    if file_name in os.listdir(path):
+        curr_df = pd.read_csv(file_path)
+        curr_df = curr_df.append(df, ignore_index=True, sort=False)
+        curr_df.to_csv(file_path, index=False)
     else:
-        df = pd.read_csv(file_path)
-        new_instance_df = pd.DataFrame([instance], columns=columns)
-        df = df.append(new_instance_df, ignore_index=True, sort=False)
-
-    df.to_csv(file_path, index=False)
+        df.to_csv(file_path, index=False)
 
 
 def save_user_object(user: object, config: dict) -> None:
-    save_object(
-        user,
+    df = pd.DataFrame(
+        [json.dumps(user._json, ensure_ascii=False)], columns=["user_object"])
+
+    save_dataframe(
+        df,
         config["RESULTSET_PATH"], config["USER_TABLE"]
     )
 
 
-def save_user_timeline(timeline: object, config: dict) -> None:
-    for instance in timeline:
-        save_object(
-            instance,
-            config["RESULTSET_PATH"], config["TIMELINE_TABLE"]
-        )
+def save_user_timeline(
+    identifier: int, timeline: object, config: dict
+) -> None:
+    objects = [
+        [identifier, json.dumps(instance._json, ensure_ascii=False)]
+        for instance in timeline]
+    df = pd.DataFrame(objects, columns=["id", "status_object"])
+
+    save_dataframe(
+        df,
+        config["RESULTSET_PATH"], config["TIMELINE_TABLE"]
+    )
