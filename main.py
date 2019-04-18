@@ -14,26 +14,17 @@ def create_configkey_file():
 
 def get_commandline_arguments():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument('--infile', nargs='?', type=str)
     parser.add_argument(
-        '--in', dest='infile', nargs='?', type=str
-    )
+        '--ckey', nargs='?', type=string_to_bool_type, default=False)
     parser.add_argument(
-        '--ckey', nargs='?',
-        type=string_to_bool_type, default=False
-    )
+        '--user', nargs='?', type=string_to_bool_type,
+        const=True, default=True)
     parser.add_argument(
-        '--user', nargs='?',
-        type=string_to_bool_type,
-        const=True, default=True
-    )
-    parser.add_argument(
-        '--tline', nargs='?',
-        type=string_to_bool_type,
-        const=True, default=True
-    )
-    parser.add_argument(
-        '--range', nargs=2, type=int
-    )
+        '--tline', nargs='?', type=string_to_bool_type,
+        const=True, default=True)
+    parser.add_argument('--range', nargs=2, type=int)
 
     return parser.parse_args()
 
@@ -44,7 +35,7 @@ def string_to_bool_type(arg: str) -> bool:
     elif arg.lower() in ['false', 'f', '0']:
         return False
     else:
-        raise argparse.ArgumentTypeError("Argument need to me boolean!")
+        raise argparse.ArgumentTypeError("Argument need to be boolean!")
 
 
 if __name__ == '__main__':
@@ -58,7 +49,7 @@ if __name__ == '__main__':
             raise Exception("already exist this file")
 
     if not (args.tline or args.user):
-        raise Exception("tline and user argument can't be both False")
+        raise Exception("tline and user arguments can't be both False")
 
     if args.infile:
         if os.path.isfile(args.infile):
@@ -68,4 +59,4 @@ if __name__ == '__main__':
         else:
             raise Exception("Input file doesn't exist!")
     else:
-        print("Warning: Need to use the --in='path', informing the file path")
+        print("Warning: Need to use the --infile='path', input file path.")
