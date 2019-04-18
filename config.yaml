@@ -1,4 +1,5 @@
 RESULTSET_PATH: "resultset/"
+COMPLETE_TLINE_PATH: "resultset/timeline_table.csv"
 
 USER_TABLE: "user_table.csv"
 TIMELINE_TABLE: "timeline_table.csv"
