@@ -9,6 +9,8 @@ config.key.yaml
 
 #resultset files
 resultset/*.csv
+resultset/timelines/*.csv
+resultset/users/*.csv
 
 #tests
 test.py
