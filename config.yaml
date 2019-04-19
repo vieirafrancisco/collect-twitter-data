@@ -1,5 +1,6 @@
 RESULTSET_PATH: "resultset/"
-COMPLETE_TLINE_PATH: "resultset/timeline_table.csv"
+USER_PATH: "resultset/users/"
+TIMELINE_PATH: "resultset/timelines/"
 
-USER_TABLE: "user_table.csv"
-TIMELINE_TABLE: "timeline_table.csv"
+USER_TABLE: "user_table_{}.csv"
+TIMELINE_TABLE: "timeline_table_{}_{}.csv"
