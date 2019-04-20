@@ -3,16 +3,15 @@
 ## Description:
 Script to collect data from Twitter, with Twitter's API using python's [Tweepy](https://www.tweepy.org/) library.
 
-
 ## Requirements:
 
 * [pipenv](https://pipenv.readthedocs.io/en/latest/)
 
-```
+```console
 pip install pipenv
 ```
 
-## User Guide:
+## Usage:
 
 Clone:
 
@@ -34,7 +33,7 @@ Create config key file to insert the credentials from twitter's api access:
 pipenv run createkey
 ```
 
-Open **config.key.yaml** file will being looking like that:
+Open **config.key.yaml** file, you will see like that:
 
 ```yaml
 CONSUMER_KEY: ""
@@ -45,7 +44,7 @@ ACCESS_TOKEN_SECRET: ""
 
 Just go to the [twitter application management](https://developer.twitter.com/en/apps) to get this credentials!
 
-To use this script you need a csv with a column named **id** with user's ids rows. With this file in hands just link the path like that:
+To use this script you need a csv with a column named **id** with user's ids in the rows. With this file in hands just link the path like that:
 
 ```console
 python main.py --infile=paste/the/file/path/file_name.csv
