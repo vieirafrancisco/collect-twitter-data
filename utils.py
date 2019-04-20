@@ -117,27 +117,28 @@ def request_twitter_objects(
                 save_user_object(user, config)
                 end = time.time()
                 print("{} User {} object, success! => {:.2f}s".format(
-                    (idx+1) % 100, identifier, end-begin))
+                    (idx+1) % 101, identifier, end-begin))
             except tweepy.TweepError as e:
                 print(e)
             except Exception as e:
                 print(e)
 
         if tline_arg:
-            if (idx+1) % 100 == 0:
-                config = get_config(infile_name)
-                print("======================================")
             try:
                 begin = time.time()
                 timeline = api.user_timeline(identifier, count=200)
                 save_user_timeline(identifier, timeline, config)
                 end = time.time()
                 print("{} User {} timeline, success! => {:.2f}s".format(
-                    (idx+1) % 100, identifier, end-begin))
+                    (idx+1) % 101, identifier, end-begin))
             except tweepy.TweepError as e:
                 print(e)
             except Exception as e:
                 print(e)
+
+            if (idx+1) % 100 == 0:
+                config = get_config(infile_name)
+                print("====================================")
 
 
 def save_dataframe(df: object, path: str, file_name: str) -> None:
