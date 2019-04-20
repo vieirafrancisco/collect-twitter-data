@@ -27,7 +27,7 @@ cd ./collect-twitter-data
 pipenv install && pipenv shell
 ```
 
-Create config key file to insert the credentials from twitter's api access:
+Create config key file to insert the credentials for twitter's api access:
 
 ```console
 pipenv run createkey
